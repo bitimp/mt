@@ -4,6 +4,18 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * @property int $id
+ * @property int $account_id
+ * @property float $points_amount
+ * @property float|null payment_amount
+ * @property string|null $payment_id
+ * @property int|null $payment_time
+ * @property string $description
+ * @property int|null $points_rule
+ * @property int $canceled
+ * @property string|null $cancellation_reason
+ */
 class LoyaltyPointsTransaction extends Model
 {
     protected $table = 'loyalty_points_transaction';
@@ -17,6 +29,14 @@ class LoyaltyPointsTransaction extends Model
         'payment_amount',
         'payment_time',
     ];
+
+    public function cancel(string $cancellationReason): bool
+    {
+        $this->canceled = time();
+        $this->cancellation_reason = $cancellationReason;
+
+        return $this->save();
+    }
 
     public static function performPaymentLoyaltyPoints($account_id, $points_rule, $description, $payment_id, $payment_amount, $payment_time)
     {

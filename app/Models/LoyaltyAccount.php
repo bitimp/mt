@@ -8,6 +8,18 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 
+/**
+ * @property int $id
+ * @property string $phone
+ * @property string $card
+ * @property string $email
+ * @property bool $email_notification
+ * @property bool $phone_notification
+ * @property bool $active
+ *
+ * @property bool $isAllowedEmailNotifications
+ * @property bool $isAllowedPhoneNotifications
+ */
 class LoyaltyAccount extends Model
 {
     protected $table = 'loyalty_account';
@@ -20,6 +32,16 @@ class LoyaltyAccount extends Model
         'phone_notification',
         'active',
     ];
+
+    public function getIsAllowedEmailNotificationsAttribute(): bool
+    {
+        return $this->email && $this->email_notification;
+    }
+
+    public function getIsAllowedPhoneNotificationsAttribute(): bool
+    {
+        return $this->phone && $this->phone_notification;
+    }
 
     public function getBalance(): float
     {
